@@ -1,12 +1,116 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My GitHub Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>끝말잇기 게임</title>
+  <style>
+    /* 전체 바탕 설정 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    /* 중앙 컨테이너 */
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      width: 350px;
+      text-align: center;
+    }
+    /* 타이틀 스타일 */
+    .title {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    /* 입력창과 버튼 묶음 */
+    .input-group {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    /* 텍스트 입력창 */
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 5px 0 0 5px;
+      font-size: 1em;
+      outline: none;
+      transition: border 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #ff9a9e;
+    }
+    /* 버튼 스타일 */
+    button {
+      padding: 10px 20px;
+      background: #ff9a9e;
+      border: none;
+      color: #fff;
+      font-size: 1em;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #ff6f91;
+    }
+    /* 현재 단어 표시 영역 */
+    .current-word {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #555;
+      padding: 10px;
+      border: 2px dashed #ff9a9e;
+      border-radius: 10px;
+      min-height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
-    <h1>환영합니다!</h1>
-    <p>GitHub Pages로 만든 정적 사이트입니다.</p>
+  <div class="container">
+    <div class="title">끝말잇기 게임</div>
+    <div class="input-group">
+      <input type="text" id="wordInput" placeholder="단어를 입력하세요">
+      <button id="submitButton">입력</button>
+    </div>
+    <div>
+      <p>현재 단어:</p>
+      <div class="current-word" id="currentWord">없음</div>
+    </div>
+  </div>
+  <script>
+    // 요소 선택
+    const input = document.getElementById('wordInput');
+    const button = document.getElementById('submitButton');
+    const currentWord = document.getElementById('currentWord');
+    
+    // 버튼 클릭 시 입력값을 "현재 단어" 영역에 반영
+    button.addEventListener('click', function() {
+      const text = input.value.trim();
+      if (text !== "") {
+        currentWord.textContent = text;
+        input.value = "";
+      }
+    });
+    
+    // 엔터키 입력 시 버튼 클릭과 동일하게 동작
+    input.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        button.click();
+      }
+    });
+  </script>
 </body>
 </html>
