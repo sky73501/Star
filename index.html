@@ -105,10 +105,13 @@
 <body>
   <div class="container">
     <div class="title">끝말잇기 게임</div>
-    <div class="input-group">
-      <input type="text" id="wordInput" placeholder="단어를 입력하세요">
-      <button id="submitButton">입력</button>
-    </div>
+    <!-- 폼으로 감싸서 엔터키 입력 시 submit 이벤트 처리 -->
+    <form id="wordForm">
+      <div class="input-group">
+        <input type="text" id="wordInput" placeholder="단어를 입력하세요">
+        <button id="submitButton" type="submit">입력</button>
+      </div>
+    </form>
     <div>
       <p>현재 단어:</p>
       <div class="current-word" id="currentWord">없음</div>
@@ -138,13 +141,16 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
+    const wordForm = document.getElementById('wordForm');
     const input = document.getElementById('wordInput');
-    const button = document.getElementById('submitButton');
     const currentWordElem = document.getElementById('currentWord');
     const wordListDisplay = document.getElementById('wordListDisplay');
 
     // 단어 전송 함수
-    async function submitWord() {
+    async function submitWord(e) {
+      // 폼 제출 시 페이지 리로드 방지
+      if(e) e.preventDefault();
+      
       const text = input.value.trim();
       if (text === "") return;
       // 현재 단어 업데이트
@@ -165,14 +171,8 @@
       }, {onlyOnce: true});
     }
 
-    // 버튼 클릭 이벤트
-    button.addEventListener('click', submitWord);
-    // 엔터키 입력 이벤트 (keydown 사용)
-    input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        submitWord();
-      }
-    });
+    // 폼 submit 이벤트 처리 (엔터키 및 버튼 클릭 모두 적용)
+    wordForm.addEventListener('submit', submitWord);
 
     // 실시간 업데이트: 현재 단어 (애니메이션 효과 포함)
     onValue(ref(database, 'currentWord'), snapshot => {
