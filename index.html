@@ -5,76 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>끝말잇기 게임</title>
   <style>
-    /* 전체 바탕 설정 */
+    /* 배경 및 전체 스타일 */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Helvetica Neue', Arial, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      animation: backgroundAnimation 10s ease infinite;
+    }
+    @keyframes backgroundAnimation {
+      0% { filter: hue-rotate(0deg); }
+      50% { filter: hue-rotate(180deg); }
+      100% { filter: hue-rotate(360deg); }
     }
     /* 중앙 컨테이너 */
     .container {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      width: 350px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      padding: 40px;
+      width: 400px;
       text-align: center;
     }
     /* 타이틀 스타일 */
     .title {
-      font-size: 2em;
+      font-size: 2.5em;
       margin-bottom: 20px;
       color: #333;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-    /* 입력창과 버튼 묶음 */
+    /* 입력창과 버튼 스타일 */
     .input-group {
       display: flex;
       margin-bottom: 20px;
     }
-    /* 텍스트 입력창 */
     input[type="text"] {
       flex: 1;
-      padding: 10px;
-      border: 2px solid #ddd;
-      border-radius: 5px 0 0 5px;
-      font-size: 1em;
+      padding: 15px;
+      border: none;
+      border-radius: 10px 0 0 10px;
+      font-size: 1.2em;
       outline: none;
-      transition: border 0.3s;
     }
-    input[type="text"]:focus {
-      border-color: #ff9a9e;
-    }
-    /* 버튼 스타일 */
     button {
-      padding: 10px 20px;
-      background: #ff9a9e;
+      padding: 15px;
+      background: #FF6F61;
       border: none;
       color: #fff;
-      font-size: 1em;
-      border-radius: 0 5px 5px 0;
+      font-size: 1.2em;
+      border-radius: 0 10px 10px 0;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
     }
     button:hover {
-      background: #ff6f91;
+      background: #FF3B2E;
+      transform: scale(1.05);
     }
     /* 현재 단어 표시 영역 */
     .current-word {
-      font-size: 1.5em;
+      font-size: 2em;
       font-weight: bold;
-      color: #555;
-      padding: 10px;
-      border: 2px dashed #ff9a9e;
+      color: #fff;
+      background: #FF6F61;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      animation: pulse 1s ease;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    /* 단어 목록 스타일 */
+    .word-list {
+      text-align: left;
+      max-height: 250px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid #FF6F61;
+      padding: 15px;
       border-radius: 10px;
-      min-height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+    .word-list li {
+      margin-bottom: 10px;
+      font-size: 1.1em;
+      color: #333;
+      list-style: none;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 5px;
+    }
+    .word-list li:last-child {
+      border-bottom: none;
     }
   </style>
 </head>
@@ -89,26 +116,90 @@
       <p>현재 단어:</p>
       <div class="current-word" id="currentWord">없음</div>
     </div>
+    <div>
+      <p>단어 목록:</p>
+      <ul class="word-list" id="wordListDisplay"></ul>
+    </div>
   </div>
-  <script>
-    // 요소 선택
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { 
+      getDatabase, ref, set, push, onValue, query, limitToLast, remove 
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    // 제공된 Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOCItKXUMz_koKPZChcu2_0GhSNn-1D98",
+      authDomain: "star-be28e.firebaseapp.com",
+      databaseURL: "https://star-be28e-default-rtdb.firebaseio.com",
+      projectId: "star-be28e",
+      storageBucket: "star-be28e.firebasestorage.app",
+      messagingSenderId: "315301179877",
+      appId: "1:315301179877:web:6dbee40f9155ddc7aeff0c",
+      measurementId: "G-TGJ8K7WPPK"
+    };
+
+    // Firebase 초기화 및 데이터베이스 생성
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // DOM 요소 선택
     const input = document.getElementById('wordInput');
     const button = document.getElementById('submitButton');
-    const currentWord = document.getElementById('currentWord');
-    
-    // 버튼 클릭 시 입력값을 "현재 단어" 영역에 반영
-    button.addEventListener('click', function() {
+    const currentWordElem = document.getElementById('currentWord');
+    const wordListDisplay = document.getElementById('wordListDisplay');
+
+    // 단어 입력 및 전송 이벤트
+    button.addEventListener('click', async function() {
       const text = input.value.trim();
       if (text !== "") {
-        currentWord.textContent = text;
+        // 현재 단어 업데이트
+        await set(ref(database, 'currentWord'), text);
+        // 단어 목록에 추가 (push를 이용해 고유 ID 생성)
+        const newWordRef = push(ref(database, 'wordList'));
+        await set(newWordRef, text);
         input.value = "";
+
+        // 단어 목록이 50개를 초과하면 가장 오래된 단어 삭제
+        const wordListQuery = query(ref(database, 'wordList'), limitToLast(51));
+        onValue(wordListQuery, snapshot => {
+          const words = snapshot.val();
+          if (words && Object.keys(words).length > 50) {
+            const oldestKey = Object.keys(words)[0];
+            remove(ref(database, `wordList/${oldestKey}`));
+          }
+        }, {onlyOnce: true});
       }
     });
-    
-    // 엔터키 입력 시 버튼 클릭과 동일하게 동작
+
+    // 엔터키 입력 시 전송
     input.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         button.click();
+      }
+    });
+
+    // 실시간 업데이트: 현재 단어
+    onValue(ref(database, 'currentWord'), (snapshot) => {
+      const word = snapshot.val();
+      currentWordElem.textContent = word ? word : '없음';
+      // 업데이트 시 pulse 애니메이션 재실행
+      currentWordElem.style.animation = 'none';
+      setTimeout(() => currentWordElem.style.animation = 'pulse 1s ease', 10);
+    });
+
+    // 실시간 업데이트: 단어 목록 (최대 50개)
+    onValue(query(ref(database, 'wordList'), limitToLast(50)), (snapshot) => {
+      const data = snapshot.val();
+      wordListDisplay.innerHTML = "";
+      if (data) {
+        Object.values(data).forEach(word => {
+          const li = document.createElement('li');
+          li.textContent = word;
+          wordListDisplay.appendChild(li);
+        });
       }
     });
   </script>
