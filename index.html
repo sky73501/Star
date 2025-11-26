@@ -6,11 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -23,7 +19,6 @@
     }
 
     header {
-      flex: 0 0 auto;
       padding: 0.75rem 1.5rem;
       display: flex;
       align-items: center;
@@ -31,85 +26,40 @@
       background: rgba(15, 23, 42, 0.95);
       border-bottom: 1px solid rgba(148, 163, 184, 0.4);
       backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
 
-    header .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    header .title-block { display: flex; flex-direction: column; gap: 2px; }
+
+    header h1 { font-size: 1rem; font-weight: 600; color: #e5e7eb; }
+    header span { font-size: 0.8rem; color: #9ca3af; }
+
+    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    button, a.btn {
+      border: none; outline: none; cursor: pointer;
+      border-radius: 999px; padding: 0.4rem 0.9rem;
+      font-size: 0.8rem; font-weight: 500;
+      display: inline-flex; align-items: center;
+      text-decoration: none; white-space: nowrap;
     }
 
-    header h1 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    header span {
-      font-size: 0.8rem;
-      color: #9ca3af;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    button,
-    a.btn {
-      border: none;
-      outline: none;
-      cursor: pointer;
-      border-radius: 999px;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-      transition: transform 0.08s ease, box-shadow 0.08s ease,
-        background 0.15s ease;
-      white-space: nowrap;
-    }
-
-    button.primary,
-    a.btn.primary {
-      background: #2563eb;
-      color: #e5e7eb;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.6);
-    }
-
-    button.primary:hover,
-    a.btn.primary:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
-    button.secondary,
     a.btn.secondary {
       background: rgba(15, 23, 42, 0.9);
       color: #e5e7eb;
       border: 1px solid rgba(148, 163, 184, 0.6);
     }
 
-    button.secondary:hover,
-    a.btn.secondary:hover {
-      background: #020617;
-      transform: translateY(-1px);
+    button.primary {
+      background: #2563eb;
+      color: #e5e7eb;
     }
 
     main {
-      flex: 1 1 auto;
+      flex: 1;
+      padding: 0.75rem;
       display: flex;
       flex-direction: column;
-      padding: 0.75rem;
       gap: 0.75rem;
-      min-height: 0;
     }
 
     .ppt-wrapper {
@@ -129,75 +79,17 @@
     }
 
     .loading-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.4);
       color: #e5e7eb;
-      flex-direction: column;
-      gap: 0.8rem;
-      z-index: 5;
-      transition: opacity 0.3s ease;
+      flex-direction: column; gap: 0.8rem;
     }
 
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 3px solid rgba(148, 163, 184, 0.4);
-      border-top-color: #60a5fa;
-      animation: spin 0.9s linear infinite;
-    }
-
-    .loading-text {
-      font-size: 0.85rem;
-      color: #9ca3af;
-      text-align: center;
-      line-height: 1.4;
-    }
-
-    footer {
-      flex: 0 0 auto;
-      padding: 0.5rem 1.25rem 0.7rem;
-      font-size: 0.7rem;
-      color: #6b7280;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-      border-top: 1px solid rgba(31, 41, 55, 0.8);
-      background: #020617;
-    }
-
-    footer span {
-      white-space: nowrap;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-
-      main {
-        padding: 0.5rem;
-      }
-    }
+    .loading-overlay.hidden { display: none; }
   </style>
 </head>
+
 <body>
   <header>
     <div class="title-block">
@@ -205,24 +97,8 @@
       <span>OO고등학교 O학년 OOO · GitHub Pages 발표용</span>
     </div>
     <div class="btn-group">
-      <!-- 이 두 URL을 네 GitHub 주소에 맞게 수정 -->
-      <a
-        id="openPptBtn"
-        class="btn secondary"
-        href="#"
-        target="_blank"
-        rel="noreferrer"
-      >
-        🔗 새 탭으로 열기
-      </a>
-      <a
-        id="downloadPptBtn"
-        class="btn secondary"
-        href="#"
-        download="https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/lotto_probability_analysis_high_visibility.pptx"
-      >
-        ⬇ PPT 다운로드
-      </a>
+      <a id="openPptBtn" class="btn secondary" href="#" target="_blank">🔗 새 탭</a>
+      <a id="downloadPptBtn" class="btn secondary" href="#" download="lotto_probability_analysis_high_visibility.pptx">⬇ 다운로드</a>
       <button class="primary" id="fullscreenBtn">⛶ 전체 화면</button>
     </div>
   </header>
@@ -230,69 +106,39 @@
   <main>
     <div class="ppt-wrapper" id="pptWrapper">
       <div class="loading-overlay" id="loading">
-        <div class="spinner"></div>
-        <div class="loading-text">
-          PPT 뷰어를 불러오는 중입니다...<br />
-          잠시만 기다려 주세요.
-        </div>
+        <div>📄 PPT 로딩 중...</div>
       </div>
-
-      <!-- Office Online PPT 뷰어 -->
-      <iframe
-        id="pptFrame"
-        src=""
-        title="Lotto PPT Presentation"
-        allowfullscreen
-      ></iframe>
+      <iframe id="pptFrame" src=""></iframe>
     </div>
   </main>
 
-  <footer>
-    <span>GitHub Pages · Static PPT Viewer</span>
-    <span>F11 키를 누르면 브라우저 전체화면 모드가 됩니다.</span>
-  </footer>
-
   <script>
-    // 1) GitHub RAW PPTX 주소 넣기
+    /* 🔥 여기 REPO만 너 레포 이름으로 바꾸면 됨 */
     const rawPptUrl =
-      "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/lotto_probability_analysis_high_visibility.pptx";
+      "https://raw.githubusercontent.com/sky73501/blob/main/lotto_probability_analysis_high_visibility.pptx";
 
-    // 2) Office 웹뷰어용 URL 만들기
-    const encodedPptUrl = encodeURIComponent(rawPptUrl);
-    const officeViewerUrl =
-      "https://view.officeapps.live.com/op/embed.aspx?src=" + encodedPptUrl;
+    const encoded = encodeURIComponent(rawPptUrl);
+    const viewerUrl =
+      "https://view.officeapps.live.com/op/embed.aspx?src=" + encoded;
 
-    // 요소들
     const iframe = document.getElementById("pptFrame");
     const loading = document.getElementById("loading");
-    const fsBtn = document.getElementById("fullscreenBtn");
-    const wrapper = document.getElementById("pptWrapper");
     const openBtn = document.getElementById("openPptBtn");
     const downloadBtn = document.getElementById("downloadPptBtn");
+    const fsBtn = document.getElementById("fullscreenBtn");
+    const wrapper = document.getElementById("pptWrapper");
 
-    // iframe에 최종 주소 주입
-    iframe.src = officeViewerUrl;
+    iframe.src = viewerUrl;
 
-    iframe.addEventListener("load", () => {
-      loading.classList.add("hidden");
-    });
+    iframe.addEventListener("load", () => loading.classList.add("hidden"));
 
-    // 전체 화면 버튼
-    fsBtn.addEventListener("click", () => {
-      const elem = wrapper;
-
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      }
-    });
-
-    // 새 탭으로 열기 버튼
-    openBtn.href = officeViewerUrl;
-
-    // 다운로드 버튼
+    openBtn.href = viewerUrl;
     downloadBtn.href = rawPptUrl;
+
+    fsBtn.addEventListener("click", () => {
+      if (!document.fullscreenElement) wrapper.requestFullscreen();
+      else document.exitFullscreen();
+    });
   </script>
 </body>
 </html>
